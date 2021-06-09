@@ -1,0 +1,127 @@
+.container {
+  background: var(--manager-background);
+  height: calc(100vh - 80px);
+  padding: 2rem 0;
+  
+  .containerCreate {
+    background: var(--background);
+    width: 992px;
+    margin: 0 auto;
+    box-shadow: 2px 2px 10px rgba(189, 189, 189, 0.4);
+    
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--line);
+
+      a {
+        padding: 0.7rem;
+        background: var(--red);
+        color: var(--text-white);
+        font-weight: bold;
+        border-radius: 7px;
+      }
+    }
+
+    main {
+      form {
+        margin: 2rem;
+        padding-bottom: 2rem;
+        .inputGroup {
+          width: 100%;
+          display: flex;
+
+          div{
+            margin-right: 0.5rem;
+          }
+
+          div:last-child {
+            margin-right: 0;
+          }
+
+          .isActive {
+            margin-bottom: 1rem;
+            
+            display: flex;
+            flex-direction: column;
+            
+            label {
+              font-weight: bold;
+              margin-bottom: 5px;
+            }
+
+            button {
+              width: 100%;
+              height: 2.3rem;
+              border: none;
+              font-weight: bold;
+              border-radius: 7px;
+              flex: 1;
+              color: var(--white);
+              transition: background 0.2s;
+            }
+
+            .active {
+              background: #00BF63;
+            
+              &:hover {
+                background: #00bf63c4;
+              }
+            }
+
+            .inactive {
+              background: #949191;
+            
+              &:hover {
+                background: #949191ab;
+              }
+            }
+          }
+        }
+
+        .select {
+          label {
+            display: block;
+            font-weight: bold;
+            
+            margin-bottom: 5px;
+          }
+
+          select {
+            width: 100%;
+            height: 2.3rem;
+            padding: 0 1rem;
+            border: 1px solid var(--black);
+            background-color: var(--background);
+            border-radius: 7px;
+          }
+        }
+
+        .actions {
+          margin: 1rem 0;
+          display: flex;
+          justify-content: flex-end;
+
+          a {
+            margin-right: 1rem;
+            background-color: transparent;
+            border: 1px solid var(--red);
+            color: var(--red);
+            border-radius: 7px;
+            padding: 0.8rem 1.5rem;
+
+            transition: background 0.2s;
+
+            &:hover {
+              background: var(--red);
+              color: var(--white);
+            }
+          }
+        }
+      }
+    }
+    
+  }
+}

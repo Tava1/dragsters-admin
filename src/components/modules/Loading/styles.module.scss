@@ -1,0 +1,24 @@
+.container{
+  margin: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .loadIcon{
+    display: inline-block;
+    animation: spin 1s infinite;
+    
+    img {
+      width: 100px;
+    }
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotateZ(0);
+  }
+  100% {
+    transform: rotateZ(360deg);
+  }
+}
