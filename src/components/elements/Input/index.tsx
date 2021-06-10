@@ -9,9 +9,10 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   register: UseFormRegister<any>;
   required: boolean;
+  error?: string;
 }
 
-const Input = ({ id, label, register, required, name, ...rest }: InputProps) => (
+const Input = ({ id, label, register, required, name, error, ...rest }: InputProps) => (
   <div className={styles.container}>
     {label && <label htmlFor={id}>{label}</label>}
     <input
@@ -20,9 +21,9 @@ const Input = ({ id, label, register, required, name, ...rest }: InputProps) => 
       {...register(name, { required })}
       {...rest}
     />
-    {/* {error && (
-        <span>{error}</span>
-      )} */}
+    {error && (
+      <span>{error}</span>
+    )}
   </div>
 );
 

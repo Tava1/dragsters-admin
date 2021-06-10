@@ -4,7 +4,10 @@ import { FaEllipsisV, FaLock } from 'react-icons/fa';
 import { useAuth } from '../../hooks/AuthContext';
 import Link from 'next/link';
 
-import { Header, Footer, Loading, Pagination } from '../../components/modules';
+import Header from '../../components/modules/Header';
+import Footer from '../../components/modules/Footer';
+import Loading from '../../components/modules/Loading';
+import Pagination from '../../components/modules/Pagination';
 
 import api from '../../services/api';
 
@@ -64,10 +67,9 @@ export default function List() {
         <div className={styles.containerList}>
           <section className={styles.header}>
             <div>
-              <h2>Usuários<strong>{paginationInfo.total}</strong></h2>
+              <h2>Usuários<strong>{paginationInfo?.total}</strong></h2>
               <p>Gerenciamento de usuários cadastrados no sistema.</p>
             </div>
-
             <Link href="/menu">
               <a>
                 Menu
@@ -75,7 +77,7 @@ export default function List() {
             </Link>
 
             {currentUser.role === 'admin' && (
-              <Link href="/users/Create">
+              <Link href="/users/create">
                 <a>
                   Novo usuário
                 </a>
@@ -161,7 +163,7 @@ export default function List() {
                         <div className={styles.actions}>
                           <span
                             onClick={() => router.push({
-                              pathname: '/users/ResetPassword',
+                              pathname: '/users/reset-password',
                               query: { id: user.id }
                             })}
                           >
@@ -169,7 +171,7 @@ export default function List() {
                           </span>
                           <span
                             onClick={() => router.push({
-                              pathname: '/users/Update',
+                              pathname: '/users/update',
                               query: { id: user.id }
                             })}
                           >

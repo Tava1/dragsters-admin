@@ -29,7 +29,7 @@ export default function Login() {
             <div>
               <form onSubmit={handleSubmit(signIn)}>
                 <Input
-                  id="password"
+                  id="email"
                   name="email"
                   label="E-mail"
                   type="mail"

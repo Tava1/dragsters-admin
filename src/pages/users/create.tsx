@@ -3,25 +3,31 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/AuthContext';
 import Link from 'next/link';
 
-import { Header } from '../../components/modules';
-import { Input, Button } from '../../components/elements';
+import Header from '../../components/modules/Header';
+import Input from '../../components/elements/Input';
+import Button from '../../components/elements/Button';
 
 import api from '../../services/api';
 
 import styles from '../../styles/pages/CreateUser.module.scss'
+import { yupResolver } from '@hookform/resolvers/yup';
+import { createUserSchema } from '../../schema/user';
 
 export default function Create() {
   const { token } = useAuth();
   const router = useRouter();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(createUserSchema) });
 
   const handleNewUser = async (data) => {
-    await api.post('/users', data, { headers: { Authorization: `Bearer ${token}` } }).then((response) => {
-      router.push('/users/List');
-
-    }).catch((error) => {
-      console.error(error);
-    })
+    console.log(data);
+    await api.post('/users', data, { headers: { Authorization: `Bearer ${token}` } })
+      .then((response) => {
+        console.log(response);
+        router.push('/users/list');
+      })
+      .catch((error) => {
+        console.error(error);
+      })
   };
 
   return (
@@ -34,7 +40,7 @@ export default function Create() {
               <h2>Novo Usuário</h2>
               <p>Reúna as informações necessárias e cadastre um novo usuário.</p>
             </div>
-            <Link href="/users/List">Lista de usuários</Link>
+            <Link href="/users/list">Lista de usuários</Link>
           </section>
 
           <main>
@@ -42,29 +48,32 @@ export default function Create() {
               <Input
                 name="fullname"
                 type="text"
-                title="Nome Completo"
+                label="Nome Completo"
                 id="fullname"
                 required
                 register={register}
+                error={errors.fullname?.message}
               />
 
               <div className={styles.inputGroup}>
                 <Input
                   name="email"
                   type="mail"
-                  title="E-mail"
+                  label="E-mail"
                   id="email"
                   required
                   register={register}
+                  error={errors.email?.message}
                 />
 
                 <Input
                   name="password"
                   type="password"
-                  title="Senha"
+                  label="Senha"
                   id="password"
                   required
                   register={register}
+                  error={errors.password?.message}
                 />
               </div>
 
@@ -73,16 +82,17 @@ export default function Create() {
                 <select
                   id="role"
                   name="role"
-                  {...register}
+                  {...register('role')}
                 >
                   <option value="none">Selecionar</option>
                   <option value="stockist">Estoquista</option>
                   <option value="admin">Administrador</option>
                 </select>
+                <span>{errors.role?.message}</span>
               </div>
 
               <div className={styles.actions}>
-                <Link href="/users/List">Cancelar</Link>
+                <Link href="/users/list">Cancelar</Link>
                 <Button
                   title="Salvar"
                   type="submit"

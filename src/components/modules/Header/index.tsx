@@ -14,7 +14,7 @@ interface CurrentUser {
 }
 
 const Header = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [currentUser, setCurrentUser] = useState<CurrentUser>(user as CurrentUser);
 
   return (
@@ -22,7 +22,7 @@ const Header = () => {
       <div className={styles.navigationBar}>
         <div className={styles.logo}>
           <h1>
-            <Link href="/">
+            <Link href="/menu">
               <a>
                 DRAGSTERS
               </a>
@@ -30,33 +30,39 @@ const Header = () => {
           </h1>
         </div>
 
+
         <nav>
-          <ul>
-            <li>
-              <Link href="/products/ShowProducts">
-                <a>Inicio</a>
-              </Link>
-            </li>
-            <li><a href="#">Rodas</a></li>
-            <li><a href="#">Sobre</a></li>
-            <li><a href="#">Contato</a></li>
-          </ul>
+          {currentUser && (
+            <ul>
+              <li>
+                <Link href="/menu">
+                  <a>Menu</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/users/list">
+                  <a>Usuários</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/products/list">
+                  <a>Produtos</a>
+                </Link>
+              </li>
+              <li>
+                <Link href="/products/orders">
+                  <a>Pedidos</a>
+                </Link>
+              </li>
+            </ul>
+          )}
 
           {
-            !currentUser ? (
+            currentUser && (
               <div className={styles.signInSignOut}>
-                <Link href="/customers/login">
-                  <a>Entrar</a>
-                </Link>
-                <Link href="/customers/register">
-                  <a>Registrar</a>
-                </Link>
-              </div>
-            ) : (
-              <div className={styles.signInSignOut}>
-                <a
-                  href="/login">{currentUser.fullname}
-                </a>
+                <button onClick={signOut}>
+                  {currentUser.fullname}
+                </button>
               </div>
             )
           }

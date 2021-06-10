@@ -41,7 +41,6 @@ export default function List() {
       <Header />
       <div className={styles.container}>
         <div className={styles.containerList}>
-
           <section className={styles.header}>
             <div>
               <h2>Produtos <strong>{products.length}</strong></h2>
