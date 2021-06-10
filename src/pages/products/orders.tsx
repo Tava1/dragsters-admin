@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { FaEye, FaEllipsisV, FaBars } from 'react-icons/fa';
 import Link from 'next/link';
+import { format } from 'cpf';
 
 import Header from '../../components/modules/Header';
 import Footer from '../../components/modules/Footer';
@@ -77,12 +78,12 @@ export default function Orders() {
               <div key={ord.id} className={styles.ordersRow}>
                 <div className={styles.ordersItem}>
                   <span>#{ord.order_number}</span>
-                  <span>{ord.customer.cpf}</span>
+                  <span>CPF: {format(ord.customer.cpf)}</span>
                 </div>
                 <div className={styles.ordersItem}>
                   <span>Data da compra: {new Date(ord.created_at).toLocaleString()}</span>
-                  <span>Ultima atualização: {new Date(ord.updated_at).toLocaleString()}</span>
-                  <span>R$ {Number(ord.total) + Number(ord.shipping)}</span>
+                  <span>Última atualização: {new Date(ord.updated_at).toLocaleString()}</span>
+                  <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(ord.total) + Number(ord.shipping))}</span>
                   <select onChange={(e) => changeStatus(e.target.value, ord.id)} value={ord.order_status.id} name="" id="">
                     <option value="1">Aguardando pagamento</option>
                     <option value="2">Pagamento Rejeitado</option>
