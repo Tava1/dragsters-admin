@@ -4,12 +4,17 @@ import { useForm } from 'react-hook-form';
 import { useAuth } from '../../hooks/AuthContext';
 import Link from 'next/link';
 
-import { Input, Button } from '../../components/elements';
-import { Header, Footer } from '../../components/modules';
+import Input from '../../components/elements/Input';
+import Button from '../../components/elements/Button';
+
+import Header from '../../components/modules/Header';
+import Footer from '../../components/modules/Footer';
 
 import api from '../../services/api';
 
 import styles from '../../styles/pages/UpdateUser.module.scss';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { updateUserSchema } from '../../schema/user';
 
 interface User {
   id: string;
@@ -28,7 +33,7 @@ export default function Update() {
   const [user, setUser] = useState<User | null>();
   const [isActive, setIsActive] = useState<Boolean>();
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(updateUserSchema) });
 
   useEffect(() => {
     api.get(`/users/${id}`, { headers: { Authorization: `Bearer ${token}` } }).then((response) => {
@@ -43,15 +48,14 @@ export default function Update() {
   const handleUpdateUser = async (data) => {
     data.status = isActive;
 
-    try {
-
-      console.log(data)
-      await api.put(`users/${id}`, data, { headers: { Authorization: `Bearer ${token}` } }).then((response) => {
-        router.push('/users/List')
+    await api.put(`users/${id}`, data, { headers: { Authorization: `Bearer ${token}` } })
+      .then((response) => {
+        console.log(response)
+        router.push('/users/list')
+      })
+      .catch((error) => {
+        console.error(error);
       });
-    } catch (error) {
-      console.log(error)
-    }
   };
 
   const setStatus = (e) => {
@@ -75,7 +79,7 @@ export default function Update() {
               <h2>Atualiazar Usuário</h2>
               <p>Atualize as informações do usuário.</p>
             </div>
-            <Link href="/users/List">Lista de usuários</Link>
+            <Link href="/users/list">Lista de usuários</Link>
           </section>
 
           {user && (
@@ -90,6 +94,7 @@ export default function Update() {
                   register={register}
                   required
                   defaultValue={user.fullname}
+                  error={errors.fullname?.message}
                 />
 
                 <div className={styles.userEmail}>
@@ -103,7 +108,7 @@ export default function Update() {
                   <select
                     id="role"
                     name="role"
-                    ref={register}
+                    {...register('role')}
                     defaultValue={user.role}
                   >
                     <option value="none">Selecionar</option>
@@ -140,7 +145,7 @@ export default function Update() {
                 </div>
 
                 <div className={styles.actions}>
-                  <Link href="/users/List">Cancelar</Link>
+                  <Link href="/users/list">Cancelar</Link>
                   <Button
                     title="Salvar"
                     type="submit"

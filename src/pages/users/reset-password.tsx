@@ -3,8 +3,12 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../../hooks/AuthContext';
 import Link from 'next/link';
 
-import { Input, Button } from '../../components/elements';
-import { Header, Footer } from '../../components/modules';
+import Input from '../../components/elements/Input';
+import Button from '../../components/elements/Button';
+
+import Header from '../../components/modules/Header';
+import Footer from '../../components/modules/Footer';
+
 
 import styles from '../../styles/pages/CreateProduct.module.scss'
 import api from '../../services/api';
@@ -19,7 +23,7 @@ export default function ResetPassword() {
 
     if (data.password === data.repeatPassword) {
       await api.patch(`/users/password/${id}`, { password: data.password }, { headers: { Authorization: `Bearer ${token}` } }).then((response) => {
-        router.push('/users/List')
+        router.push('/users/list')
       }).catch((error) => {
         console.error(error);
       })
@@ -59,7 +63,7 @@ export default function ResetPassword() {
               </div>
 
               <div className={styles.actions}>
-                <Link href="/users/List">Cancelar</Link>
+                <Link href="/users/list">Cancelar</Link>
                 <Button
                   title="Próximo"
                   type="submit"

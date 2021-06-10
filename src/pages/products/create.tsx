@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
+import { createProductSchema } from '../../schema/product'
 import Link from 'next/link';
 import crypto from 'crypto';
 
@@ -29,7 +32,7 @@ const FIREBASE_PATH_PRODUCTS = "products/"
 
 export default function Create() {
   const router = useRouter();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(createProductSchema) });
   const [isActive, setIsActive] = useState<Boolean>(true);
   const [productCreated, setProductCreated] = useState<ProductCreated>({} as ProductCreated);
 
@@ -127,7 +130,7 @@ export default function Create() {
       <Header />
       <div className={styles.container}>
         <div className={styles.containerCreate}>
-          <section>
+          <section className={styles.header}>
             <div>
               <h2>Novo Produtos</h2>
               <p>Reúna as informações necessárias e cadastre um novo produto.</p>
@@ -145,6 +148,7 @@ export default function Create() {
                   id="product_name"
                   required
                   register={register}
+                  error={errors.product_name?.message}
                 />
 
                 <Input
@@ -154,6 +158,7 @@ export default function Create() {
                   id="product_fullname"
                   required
                   register={register}
+                  error={errors.product_fullname?.message}
                 />
 
                 <Input
@@ -163,6 +168,7 @@ export default function Create() {
                   id="product_brand"
                   required
                   register={register}
+                  error={errors.brand?.message}
                 />
               </div>
 
@@ -172,6 +178,7 @@ export default function Create() {
                 label="Descrição"
                 required
                 register={register}
+                error={errors.description?.message}
               />
 
               <div className={styles.inputGroup}>
@@ -182,6 +189,7 @@ export default function Create() {
                   id="supply"
                   required
                   register={register}
+                  error={errors.supply?.message}
                 />
 
                 <Input
@@ -191,6 +199,7 @@ export default function Create() {
                   id="price"
                   required
                   register={register}
+                  error={errors.price?.message}
                 />
 
                 <div className={styles.isActive}>
@@ -235,7 +244,7 @@ export default function Create() {
               />
 
               <div className={styles.actions}>
-                <Link href="/products/List">Cancelar</Link>
+                <Link href="/products/list">Cancelar</Link>
                 <Button
                   title="Finalizar"
                   type="submit"

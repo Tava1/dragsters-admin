@@ -11,6 +11,8 @@ import TextArea from '../../components/elements/TextArea';
 import styles from '../../styles/pages/UpdateProduct.module.scss';
 import api from '../../services/api';
 import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { updateProductSchema } from '../../schema/product';
 
 interface ShowcaseInfo {
   id: string;
@@ -39,12 +41,11 @@ export default function Update() {
   const [productId, setProductID] = useState('');
   const [isActive, setIsActive] = useState(false);
 
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(updateProductSchema) });
 
   useEffect(() => {
-
     api.get(`/products/${id}`).then((response) => {
-      const { product, showcase } = response.data
+      const { product } = response.data
 
       setProductDetail(product)
       setProductID(product.product_id);
@@ -52,22 +53,6 @@ export default function Update() {
     }).catch((error) => {
       console.error(error);
     })
-  }, []);
-
-
-  const handleUpdateProduct = useCallback(async (data) => {
-
-    data.status = isActive;
-
-    try {
-      await api.put(`products/${id}`, data).then((response) => {
-        console.log(response);
-      });
-      router.push('/products/List');
-    } catch (error) {
-      console.log(error)
-    }
-
   }, []);
 
   const setStatus = (e) => {
@@ -81,6 +66,19 @@ export default function Update() {
     setIsActive(true);
     console.log(`to true: ${isActive}`)
   }
+
+  const handleUpdateProduct = async (data) => {
+    console.log(data)
+
+    data.status = isActive;
+
+    await api.put(`/products/${id}`, data).then((response) => {
+      console.log(response);
+      router.push('/products/list');
+    }).catch((error => {
+      console.error(error)
+    }));
+  };
 
   return (
     <>
@@ -98,7 +96,6 @@ export default function Update() {
           {productDetail && (
             <main>
               <form onSubmit={handleSubmit(handleUpdateProduct)}>
-
                 <div className={styles.inputGroup}>
                   <Input
                     name="product_name"
@@ -108,6 +105,7 @@ export default function Update() {
                     required
                     register={register}
                     defaultValue={productDetail.product_name}
+                    error={errors.product_name?.message}
                   />
 
                   <Input
@@ -118,6 +116,7 @@ export default function Update() {
                     required
                     register={register}
                     defaultValue={productDetail.product_fullname}
+                    error={errors.product_fullname?.message}
                   />
 
                   <Input
@@ -128,6 +127,7 @@ export default function Update() {
                     required
                     register={register}
                     defaultValue={productDetail.brand}
+                    error={errors.brand?.message}
                   />
                 </div>
 
@@ -138,6 +138,8 @@ export default function Update() {
                   defaultValue={productDetail.description}
                   required
                   register={register}
+                  error={errors.description?.message}
+
                 />
 
                 <div className={styles.inputGroup}>
@@ -149,6 +151,7 @@ export default function Update() {
                     required
                     defaultValue={productDetail.supply}
                     register={register}
+                    error={errors.supply?.message}
                   />
 
                   <Input
@@ -159,6 +162,7 @@ export default function Update() {
                     required
                     defaultValue={productDetail.price}
                     register={register}
+                    error={errors.price?.message}
                   />
 
                   <Input
@@ -195,7 +199,7 @@ export default function Update() {
                 </div>
 
                 <div className={styles.actions}>
-                  <Link href="/">Cancelar</Link>
+                  <Link href="/products/list">Cancelar</Link>
                   <Button
                     title="Salvar"
                     type="submit"

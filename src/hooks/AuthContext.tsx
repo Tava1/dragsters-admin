@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { useRouter } from 'next/router'
 import api from '../services/api';
-
+import Cookies from 'js-cookie';
 
 interface AuthState {
   token: string;
@@ -23,31 +23,33 @@ interface AuthContextData {
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
 
 const AuthProvider: React.FC = ({ children }) => {
+  const router = useRouter();
   const [data, setData] = useState<AuthState>(() => {
-    // const token = localStorage.getItem('@dragsters:token');
-    // const user = localStorage.getItem('@dragsters:user');
+    const token = Cookies.get('@dragsters_admin:token');
+    const user = Cookies.get('@dragsters_admin:user');
 
-    // if (token && user) {
-    //   return { token, user: JSON.parse(user) };
-    // }
+    if (token && user) {
+      router.push('/menu');
+
+      return { token, user: JSON.parse(user) };
+    }
 
     return {} as AuthState;
   });
 
-  const router = useRouter();
 
   const signIn = useCallback(async ({ email, password }) => {
-    console.log(email)
     const response = await api.post('sessions', {
       email,
       password,
-    });
+    })
 
+    console.log(response)
 
     const { token, user } = response.data;
 
-    localStorage.setItem('@dragsters:token', token);
-    localStorage.setItem('@dragsters:user', JSON.stringify(user));
+    Cookies.set('@dragsters_admin:token', token);
+    Cookies.set('@dragsters_admin:user', JSON.stringify(user));
 
     setData({ token, user });
 
@@ -56,8 +58,8 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   const signOut = useCallback(() => {
-    localStorage.removeItem('@dragsters:token');
-    localStorage.removeItem('@dragsters:user');
+    Cookies.remove('@dragsters_admin:token');
+    Cookies.remove('@dragsters_admin:user');
 
     setData({} as AuthState);
 
