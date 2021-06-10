@@ -95,7 +95,7 @@ export default function List() {
                         <span>{product.supply}</span>
                       </div>
                       <div className={styles.price}>
-                        <span>R${product.price}</span>
+                        <span>{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(product.price)}</span>
                       </div>
                       <div className={styles.status}>
                         {
